@@ -1,3 +1,4 @@
+"""Main Resume Checker App"""
 import os
 import tempfile
 import logging
@@ -37,9 +38,9 @@ def read_file(file_path):
             import PyPDF2
             with open(file_path, "rb") as file:
                 reader = PyPDF2.PdfReader(file)
-                return "".join(page.extract_text() or "" for page in reader.pages) 
+                return "".join(page.extract_text() or "" for page in reader.pages)
         raise ValueError("Unsupported file format. Please use .docx or .pdf.")
-    except Exception as e:
+    except Exception as e: # pylint: disable=broad-exception-caught
         print(f"Error reading file: {e}")
         return ""
 
@@ -119,8 +120,7 @@ def index():
             result = assess_resume_compatibility(job_description, resume_path)
             os.remove(resume_path)
             return jsonify(result)
-        else:
-            return jsonify({'error': 'Invalid file type'})
+        return jsonify({'error': 'Invalid file type'})
     return render_template('index.html')
 
 if __name__ == '__main__':
