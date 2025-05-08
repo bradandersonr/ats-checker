@@ -55,13 +55,10 @@ def assess_resume_compatibility(job_description, resume_file):
     if not resume_text:
         return "Error reading resume file."
 
-    resume_content = resume_text
-    jd_content = job_description
-
     ats = ATS()
 
-    ats.load_resume(resume_content)
-    ats.load_job_description(jd_content)
+    ats.load_resume(resume_text)
+    ats.load_job_description(job_description)
 
     # Extract and clean experience
     experience = ats.extract_experience()
