@@ -55,36 +55,24 @@ def assess_resume_compatibility(job_description, resume_file):
     if not resume_text:
         return "Error reading resume file."
 
-    # Use simple-ats to compare the files
-    with tempfile.NamedTemporaryFile(mode='w+t', delete=True) as job_temp, \
-            tempfile.NamedTemporaryFile(mode='w+t', delete=True) as resume_temp:
-        job_temp.write(job_description)
-        resume_temp.write(resume_text)
-        job_temp.seek(0)
-        resume_temp.seek(0)
+    resume_content = resume_text
+    jd_content = job_description
 
-        #
-        #resume_content = job_temp.name
-        #jd_content = resume_temp.name
+    ats = ATS()
 
-        resume_content = resume_text
-        jd_content = job_description
+    ats.load_resume(resume_content)
+    ats.load_job_description(jd_content)
 
-        ats = ATS()
+    # Extract and clean experience
+    experience = ats.extract_experience()
+    ats.clean_experience(experience)
 
-        ats.load_resume(resume_content)
-        ats.load_job_description(jd_content)
+    # Extract and clean skills
+    skills = " ".join(ats.extract_skills())
+    ats.clean_skills(skills)
 
-        # Extract and clean experience
-        experience = ats.extract_experience()
-        ats.clean_experience(experience)
-
-        # Extract and clean skills
-        skills = " ".join(ats.extract_skills())
-        ats.clean_skills(skills)
-
-        similarity_score = ats.compute_similarity()
-        percentage_similarity = round(similarity_score.item() * 100, 2)
+    similarity_score = ats.compute_similarity()
+    percentage_similarity = round(similarity_score.item() * 100, 2)
 
     return {
         "similarity_score": percentage_similarity,
