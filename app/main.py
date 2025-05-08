@@ -1,6 +1,5 @@
 """Main Resume Checker App"""
 import os
-import tempfile
 import logging
 import nltk
 from werkzeug.utils import secure_filename
