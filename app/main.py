@@ -1,10 +1,11 @@
 import os
-from werkzeug.utils import secure_filename
-from flask import Flask, request, render_template, jsonify
-from simple_ats.ats import ATS
 import tempfile
 import logging
 import nltk
+from werkzeug.utils import secure_filename
+from flask import Flask, request, render_template, jsonify
+from simple_ats.ats import ATS
+
 nltk.download('punkt_tab')
 
 logging.basicConfig(level=logging.DEBUG)
@@ -32,13 +33,14 @@ def read_file(file_path):
             from docx import Document
             doc = Document(file_path)
             return " ".join(p.text for p in doc.paragraphs)
-        elif file_path.lower().endswith(".pdf"):
+        
+        if file_path.lower().endswith(".pdf"):
             import PyPDF2
             with open(file_path, "rb") as file:
                 reader = PyPDF2.PdfReader(file)
                 return "".join(page.extract_text() or "" for page in reader.pages)
-        else:
-            raise ValueError("Unsupported file format. Please use .docx or .pdf.")
+            
+        raise ValueError("Unsupported file format. Please use .docx or .pdf.")
     except Exception as e:
         print(f"Error reading file: {e}")
         return ""
@@ -84,7 +86,7 @@ def assess_resume_compatibility(job_description, resume_file):
         skills = " ".join(ats.extract_skills())
         ats.clean_skills(skills)
 
-        similarity_score = ats.compute_similarity()        
+        similarity_score = ats.compute_similarity()
         percentage_similarity = round(similarity_score.item() * 100, 2)
 
     return {
