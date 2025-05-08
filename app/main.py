@@ -33,19 +33,15 @@ def read_file(file_path):
             from docx import Document
             doc = Document(file_path)
             return " ".join(p.text for p in doc.paragraphs)
-        
         if file_path.lower().endswith(".pdf"):
             import PyPDF2
             with open(file_path, "rb") as file:
                 reader = PyPDF2.PdfReader(file)
-                return "".join(page.extract_text() or "" for page in reader.pages)
-            
+                return "".join(page.extract_text() or "" for page in reader.pages) 
         raise ValueError("Unsupported file format. Please use .docx or .pdf.")
     except Exception as e:
         print(f"Error reading file: {e}")
         return ""
-
-
 
 def assess_resume_compatibility(job_description, resume_file):
     """
@@ -94,19 +90,15 @@ def assess_resume_compatibility(job_description, resume_file):
         "compatibility_message": get_compatibility_message(percentage_similarity),
     }
 
-
 def get_compatibility_message(similarity):
     """
     Gets the compatibility message based on the similarity score.
     """
     if similarity > 80:
         return "The resume is highly compatible with the job description."
-    elif similarity > 60:
+    if similarity > 60:
         return "The resume is moderately compatible with the job description."
-    else:
-        return "The resume is not very compatible with the job description."
-
-
+    return "The resume is not very compatible with the job description."
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -130,7 +122,6 @@ def index():
         else:
             return jsonify({'error': 'Invalid file type'})
     return render_template('index.html')
-
 
 if __name__ == '__main__':
     app.run(debug=True)
