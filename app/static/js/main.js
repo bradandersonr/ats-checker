@@ -15,51 +15,44 @@ document.addEventListener("DOMContentLoaded", function () {
 		}
 	});
 
-	form.addEventListener("htmx:beforeRequest", function (evt) {
+	form.addEventListener("submit", async function (e) {
+		e.preventDefault();
+
+		// Show loading state
 		loadingIndicator.style.display = "inline-block";
 		errorDiv.style.display = "none";
 		resultsDiv.innerHTML = "Analysing your compatibility...";
-	});
 
-	form.addEventListener("htmx:afterRequest", function (evt) {
-		loadingIndicator.style.display = "none";
-		if (evt.detail.failed) {
-			errorDiv.textContent = "An error occurred. Please try again.";
-			errorDiv.style.display = "block";
-			resultsDiv.innerHTML =
-				"<p>An error occurred. Please check your input and try again.</p>";
-		}
-	});
+		try {
+			const formData = new FormData(form);
+			const response = await fetch("/", {
+				method: "POST",
+				body: formData,
+			});
 
-	form.addEventListener("htmx:responseError", function (evt) {
-		errorDiv.textContent = "Server connection error. Please try again.";
-		errorDiv.style.display = "block";
-		resultsDiv.innerHTML = "<p>Server connection error. Please try again.</p>";
-	});
+			const data = await response.json();
 
-	form.addEventListener("htmx:response", function (evt) {
-		const response = JSON.parse(evt.detail.xhr.responseText);
-
-		if (evt.detail.xhr.status === 400) {
-			errorDiv.textContent = response.error;
-			errorDiv.style.display = "block";
-			resultsDiv.innerHTML = `<p>${response.error}</p>`;
-		} else if (evt.detail.xhr.status === 200) {
-			try {
-				resultsDiv.innerHTML = `
-                    <h2 class="title is-4 has-text-centered">${
-											response.compatibility_message
-										}</h2>
-                    <p class="has-text-centered">Similarity Score: ${response.similarity_score.toFixed(
-											2
-										)}%</p>
-                `;
-			} catch (error) {
-				console.error("Error parsing JSON:", error);
-				errorDiv.textContent = "Error: Invalid response from server.";
-				errorDiv.style.display = "block";
-				resultsDiv.innerHTML = "<p>Error: Invalid response from server.</p>";
+			if (!response.ok) {
+				throw new Error(data.error || "An error occurred");
 			}
+
+			// Display success results
+			resultsDiv.innerHTML = `
+				<h2 class="title is-4 has-text-centered">${data.compatibility_message}</h2>
+				<p class="has-text-centered">Similarity Score: ${data.similarity_score.toFixed(
+					2
+				)}%</p>
+			`;
+		} catch (error) {
+			console.error("Error:", error);
+			errorDiv.textContent =
+				error.message || "An error occurred. Please try again.";
+			errorDiv.style.display = "block";
+			resultsDiv.innerHTML = `<p>${
+				error.message || "An error occurred. Please try again."
+			}</p>`;
+		} finally {
+			loadingIndicator.style.display = "none";
 		}
 	});
 });
