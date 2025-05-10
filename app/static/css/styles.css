@@ -1,0 +1,37 @@
+body {
+	min-height: 100vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: #f5f5f5;
+}
+
+.container {
+	max-width: 800px;
+	width: 100%;
+	margin: 2rem auto;
+}
+
+.title {
+	color: #485fc7;
+}
+
+#results {
+	margin-top: 1.5rem;
+}
+
+.spinner {
+	display: inline-block;
+	width: 1rem;
+	height: 1rem;
+	border: 2px solid #fff;
+	border-radius: 50%;
+	border-top-color: transparent;
+	animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
