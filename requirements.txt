@@ -8,7 +8,7 @@ bs4==0.0.2
 catalogue==2.0.10
 certifi==2025.4.26
 charset-normalizer==3.4.2
-click==8.1.8
+click==8.2.0
 cloudpathlib==0.21.0
 confection==0.1.5
 cymem==2.0.11
