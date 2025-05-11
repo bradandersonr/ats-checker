@@ -13,14 +13,17 @@ logging.basicConfig(level=logging.DEBUG)
 
 app = Flask(__name__)
 
-Talisman(app, content_security_policy={
-    'default-src': '\'self\'',
-    'script-src': '\'self\' cdn.jsdelivr.net',
-    'style-src': '\'none\'',
-    'object-src': '\'none\'',
-    'frame-ancestors': '\'none\'',
-    'require-trusted-types-for': '\'script\''
-})
+Talisman(app, 
+        force_https=False, 
+        force_https_permanent=False, 
+        content_security_policy={
+            'default-src': '\'self\'',
+            'script-src': '\'self\' cdn.jsdelivr.net',
+            'style-src': '\'unsafe-inline\' \'self\' cdn.jsdelivr.net',
+            'object-src': '\'none\'',
+            'frame-ancestors': '\'none\'',
+            'require-trusted-types-for': '\'script\''
+        })
 
 # Configure upload folder
 UPLOAD_FOLDER = 'uploads'
@@ -83,6 +86,8 @@ def assess_resume_compatibility(job_description, resume_file):
     return {
         "compatibility_score": percentage_compatibility,
         "compatibility_rating": get_compatibility_message(percentage_compatibility),
+        "skills": skills,
+        "experience": experience,
     }
 
 def get_compatibility_message(compatibility):
