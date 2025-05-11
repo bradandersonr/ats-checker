@@ -67,23 +67,23 @@ def assess_resume_compatibility(job_description, resume_file):
     skills = " ".join(ats.extract_skills())
     ats.clean_skills(skills)
 
-    similarity_score = ats.compute_similarity()
-    percentage_similarity = round(similarity_score.item() * 100, 2)
+    compatibility_score = ats.compute_similarity()
+    percentage_compatibility = round(compatibility_score.item() * 100, 2)
 
     return {
-        "similarity_score": percentage_similarity,
-        "compatibility_message": get_compatibility_message(percentage_similarity),
+        "compatibility_score": percentage_compatibility,
+        "compatibility_rating": get_compatibility_message(percentage_compatibility),
     }
 
-def get_compatibility_message(similarity):
+def get_compatibility_message(compatibility):
     """
-    Gets the compatibility message based on the similarity score.
+    Gets the compatibility message based on the compatibility score.
     """
-    if similarity > 80:
-        return "The resume is highly compatible with the job description."
-    if similarity > 60:
-        return "The resume is moderately compatible with the job description."
-    return "The resume is not very compatible with the job description."
+    if compatibility > 80:
+        return "high"
+    if compatibility > 60:
+        return "moderate"
+    return "poor"
 
 @app.route('/', methods=['GET', 'POST'])
 def index():

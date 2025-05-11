@@ -20,6 +20,23 @@ body {
 	margin-top: 1.5rem;
 }
 
+#results h1, h2, h3 {
+	font-weight: bold;
+}
+
+#results h2 {
+	font-size: 1.8rem;
+}
+
+#results h3 {
+	font-size: 1.2rem;
+}
+
+#results p, h1, h2, h3 {
+	margin-top: 0.6rem;
+	margin-bottom: 0.6rem;
+}
+
 .spinner {
 	display: inline-block;
 	width: 1rem;
