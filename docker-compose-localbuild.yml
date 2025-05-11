@@ -1,0 +1,5 @@
+services:
+  ats-web:
+    build: .
+    ports:
+      - "8000:5000"

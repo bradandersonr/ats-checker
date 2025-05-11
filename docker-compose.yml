@@ -1,5 +1,5 @@
 services:
   ats-web:
-    build: .
+    image: bradandersonr/ats-checker:latest
     ports:
-      - "8000:5000"
+    - "5000:5000"
