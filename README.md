@@ -32,3 +32,7 @@ python app/main.py
 3. Upload your resume (PDF or DOCX format) and paste the job description
 
 4. Click "Analyze" to get your compatibility score and assessment
+
+
+
+#
