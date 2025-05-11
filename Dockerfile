@@ -36,8 +36,6 @@ RUN rm -rf /var/lib/apt/lists/* /usr/share/doc /usr/share/man
 
 USER python
 
-EXPOSE 8000
-
 COPY --chown=python:python . .
 
 CMD ["flask", "run"]

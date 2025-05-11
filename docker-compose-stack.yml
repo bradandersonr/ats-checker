@@ -14,8 +14,8 @@ services:
         - "traefik.http.routers.ats.rule=Host(`ats.exampl.tech`)"
         - "traefik.http.routers.ats.entrypoints=websecure"
         - "traefik.http.routers.ats.tls=true"
-        - "traefik.http.services.ats.loadbalancer.server.port=5000"
-        - "traefik.http.routers.ats.middlewares=error-pages,forward-auth"
+        - "traefik.http.services.ats.loadbalancer.server.port=8000"
+        - "traefik.http.routers.ats.middlewares=error-pages"
         - "traefik.constraint=proxy-public"
     networks:
       - traefik_webapp-dmz
