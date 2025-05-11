@@ -1,4 +1,4 @@
-FROM python:3.12-bookworm
+FROM python:3.13-bookworm
 LABEL maintainer="Brad Anderson <brad@andersonr.com>"
 
 ARG UID=1000
@@ -6,7 +6,7 @@ ARG GID=1000
 
 WORKDIR /app
 
-ARG FLASK_DEBUG="false"
+ARG FLASK_DEBUG="False"
 ENV FLASK_DEBUG="${FLASK_DEBUG}" 
 ENV FLASK_APP=app/main.py
 ENV FLASK_RUN_HOST=0.0.0.0
