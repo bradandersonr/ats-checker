@@ -9,7 +9,8 @@ services:
         condition: on-failure
       labels:
         - "traefik.enable=true"
-        - "traefik.docker.network=traefik"  
+        - "traefik.docker.network=traefik_webapp-dmz"  
+        - "traefik.swarm.network=traefik_webapp-dmz"  
         - "traefik.http.routers.ats.rule=Host(`ats.exampl.tech`)"
         - "traefik.http.routers.ats.entrypoints=websecure"
         - "traefik.http.routers.ats.tls=true"
@@ -18,3 +19,6 @@ services:
         - "traefik.constraint=proxy-public"
     networks:
       - traefik_webapp-dmz
+networks:
+  traefik_webapp-dmz:
+    external: true
