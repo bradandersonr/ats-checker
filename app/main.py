@@ -5,7 +5,7 @@ import nltk
 from werkzeug.utils import secure_filename
 from flask import Flask, request, render_template, jsonify
 from simple_ats.ats import ATS
-from talisman import Talisman
+#from talisman import Talisman
 
 nltk.download('punkt_tab')
 
@@ -13,17 +13,17 @@ logging.basicConfig(level=logging.DEBUG)
 
 app = Flask(__name__)
 
-Talisman(app, 
-        force_https=False, 
-        force_https_permanent=False, 
-        content_security_policy={
-            'default-src': '\'self\'',
-            'script-src': '\'self\' cdn.jsdelivr.net',
-            'style-src': '\'unsafe-inline\' \'self\' cdn.jsdelivr.net',
-            'object-src': '\'none\'',
-            'frame-ancestors': '\'none\'',
-            'require-trusted-types-for': '\'script\''
-        })
+#Talisman(app, 
+#        force_https=False, 
+#        force_https_permanent=False, 
+#        content_security_policy={
+#            'default-src': '\'self\'',
+#            'script-src': '\'self\' cdn.jsdelivr.net',
+#            'style-src': '\'unsafe-inline\' \'self\' cdn.jsdelivr.net',
+#            'object-src': '\'none\'',
+#            'frame-ancestors': '\'none\'',
+#            'require-trusted-types-for': '\'script\''
+#        })
 
 # Configure upload folder
 UPLOAD_FOLDER = 'uploads'

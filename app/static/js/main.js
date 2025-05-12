@@ -38,6 +38,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
 			const compatibility_score = data.compatibility_score.toFixed(2);
 			const compatibility_rating = data.compatibility_rating;
+			const skills = data.skills;
+			const experience = data.experience;
 
 			let compatibility_explaination = 'This is likely due to very few keywords mentioned in the Job Ad being present in your resune. Update your resume with keywords found in the Job Ad to improve your score.';
 			if (compatibility_score > 80) {
@@ -61,7 +63,10 @@ document.addEventListener("DOMContentLoaded", function () {
 				<h2 class="title is-4 has-text-centered">Compatability Rating: <span style="color: ${hard_colour}">${compatibility_rating.toUpperCase()}</span></h2>
 				<h3 class="">Suggestions</h3>
 				<p>${compatibility_explaination}</p>
+				<p>Your Skills: <pre>${skills}</pre></p>
+				<p>Your Experience: <pre>${experience}</pre></p>
 				<h2 class="has-text-centered">Score: ${compatibility_score}%</h2>
+				
 				<div>
 					<canvas id="compatibility-chart"></canvas>
 				</div>

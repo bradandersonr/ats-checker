@@ -1,4 +1,4 @@
-FROM python:3.12-bookworm
+FROM python:3.12-slim-bookworm
 LABEL maintainer="Brad Anderson <brad@andersonr.com>"
 
 ARG UID=1000
@@ -22,6 +22,7 @@ COPY requirements.txt requirements.txt
 # Upgrade PIP and install requirements
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
+RUN python -m spacy download en_core_web_sm
 
 # Remove build-essential and clean up/harden system
 RUN apt-get purge -y build-essential \
