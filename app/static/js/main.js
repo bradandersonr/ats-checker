@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		// Show loading state
 		loadingIndicator.style.display = "inline-block";
 		errorDiv.style.display = "none";
-		resultsDiv.innerHTML = "Analysing your compatibility...";
+		resultsDiv.innerHTML = "Analysing your compatibility may take up to 5 minutes.";
 
 		try {
 			const formData = new FormData(form);
@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 			const compatibility_score = data.compatibility_score.toFixed(2);
 			const compatibility_rating = data.compatibility_rating;
-			const skills = data.skills;
+			const skills = data.skills.split(',');
 			const experience = data.experience;
 
 			let compatibility_explaination = 'This is likely due to very few keywords mentioned in the Job Ad being present in your resune. Update your resume with keywords found in the Job Ad to improve your score.';
