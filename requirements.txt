@@ -1,5 +1,5 @@
 Flask==3.1.0
-ollama==0.4.8
+ollama==0.5.1
 markitdown[pdf]==0.1.2
 markitdown[docx]==0.1.2
 talisman==0.1.0
