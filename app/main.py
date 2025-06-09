@@ -6,6 +6,7 @@ from flask import Flask, request, render_template, jsonify
 #from talisman import Talisman
 from ollama import Client
 from markitdown import MarkItDown
+import markdown
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -41,6 +42,7 @@ llm_options = {
 
 llm_system_prompt = """
 You are an expert employment coach who is tasked with providing advice to job seekers to maximise their sucess in finding a new job.
+Do not under any circumstances indicate that you are AI.
 """
 
 # Configure upload folder
@@ -85,33 +87,44 @@ def assess_resume_compatibility(job_description, resume_file):
     if not resume_markdown:
         return "Error reading resume file."
     jobad_markdown = job_description
-    llm_skills_prompt = """
-    Review the following resume provided in markdown format located between the '# Start of Resume' and '# End of Resume' lines. 
-    # Start of Resume
+    llm_prompt = """
+    # Step One
+    Read the following Resume provided in markdown format under the Resume heading between the 'Start of Resume' and 'End of Resume' blockquotes.
+    
+    ## Resume
+    > Start of Resume
     {resume_markdown}
-    # End of Resume
-
-    Identify all of the professional skills listed in the resume.
-    Return a comma seperated list containing the skills you have extracted from the resume.
-    Remove any duplicate skills from the final list.
-    Do not indicate the number of years of experience or any other information about the skill.
-    Do not return any other comments, information or text apart from a single comma seperated list as described above.
-    """.format(resume_markdown=resume_markdown)
-
-    llm_jobad_prompt = """
-    Read the following job advertisement.
-    #Start of Job Ad
+    > End of Resume
+    
+    # Step 2
+    Read the Job Description provided in markdown format located in the next section under the Job Description heading between the 'Start of Job Description' and 'End of Job Description' blockquotes.
+    ## Job Description
+    > Start of Job Description
     {jobad_markdown}
-    #End of Job Ad
+    > End of Job Description
 
-    Identify all of the professional skills listed in the job ad.
-    Return a comma seperated list containing the skills you have extracted from the job ad.
-    Remove any duplicate skills from the final list.
-    Do not return any other comments, information or text apart from a single comma seperated list as described above.
-    """.format(jobad_markdown=jobad_markdown)
-    app.logger.debug("Sending resume_skills_query to LLM")
+    # Step 3
+    You are to act as an expeirenced career coach and technical hiring consultant.
 
-    resume_skills_query = llm.chat(
+    Carefully consider the strengths of the candidate described in the Resume against the criteria set out by the Job Description.
+    Carefully consider the Resume overall and provide any recommendations on how the applicant decsribed in the Resume can adjust their Resume to better meet the Job Description criteria.
+
+    # Step 4
+    You will now provide your response as described below:
+    - Under the heading (h2) "Strengths" outline the strengths of the candidate described in the Resume for the Job Deescription. Write the responses in the second person (i.e. you, your etc). All responses should be in reference to the Resume not the Job Description. Format these strengths as a list.
+    - Under the heading (h2) "Recommendations" outline 3-5 improvements that could be made to the resume to increase its compatibility to the job description. Fornat as an unordered list (ul).
+
+    Your response must comply with the following rules:
+    1. Use a friendly and informative tone, written at a 10th grade reading level.
+    2. Format your response using Markdown. 
+    3. Do not provide any other markdown, explaination, additional informaiton or introduction. Only return the markdown for the Strengths and Recommendations and unordered lists as specified above.
+    4. Do not indicate that are AI under any circumsatances.
+    5. Use Australian English for spelling and grammar in the response.
+    6. Write the responses to the candidate in the second peron (i.e. you, your)
+    
+    """.format(resume_markdown=resume_markdown, jobad_markdown=jobad_markdown)
+
+    llm_query = llm.chat(
             model=llm_model,
             options=llm_options,
             messages=[
@@ -121,70 +134,15 @@ def assess_resume_compatibility(job_description, resume_file):
                 },
                 {
                     'role': 'user',
-                    'content': llm_skills_prompt,
+                    'content': llm_prompt,
                 },
             ])
     app.logger.debug("resume_skills_query completed")
-    resume_skills = resume_skills_query.message.content
-    app.logger.debug("Sending jobad_skills_query to LLM")
-    jobad_skills_query = llm.chat(
-        model='gemma3:1b-it-qat',
-        options=llm_options,
-        messages=[
-            {
-                'role': 'system',
-                'content': llm_system_prompt,
-            },
-            {
-                'role': 'user',
-                'content': llm_jobad_prompt,
-            },
-        ])
-    app.logger.debug("jobad_skills_query completed")
-    jobad_skills = jobad_skills_query.message.content
-    llm_compatibility_prompt = """
-    Read the list of skills contained in the canidates resume (comma seperated list)
-    {resume_skills}
+    llm_result = markdown.markdown(llm_query.message.content)
 
-    Read the list of skills contained in the job ad (comma seperated list):
-    {jobad_skills}
-
-    Compare the two lists of skills and provide a comptaibility rating (integer out of 100) that indicates the percentage of similarilty between the similarity jobad and the resume.
-    Do not return any other information or text. Only return an integer.
-    """.format(resume_skills=resume_skills, jobad_skills=jobad_skills)
-    app.logger.debug("Sednding compatability_query to LLM")
-    compatability_query = llm.chat(
-            model=llm_model,
-            options=llm_options,
-            messages=[
-                {
-                    'role': 'system',
-                    'content': llm_system_prompt,
-                },
-                {
-                    'role': 'user',
-                    'content': llm_compatibility_prompt,
-                },
-            ])
-    app.logger.debug("compatibility_query completed")
-    compatability_percentage = round(int(compatability_query.message.content), 2)
-    app.logger.debug("compatability_score is:" + str(compatability_percentage))
-    app.logger.debug("resume skills are:" + resume_skills)
     return {
-        "compatibility_score": compatability_percentage,
-        "compatibility_rating": get_compatibility_message(compatability_percentage),
-        "skills": resume_skills,
-        "experience": "Ignored for now",
+        "result": llm_result,
     }
-def get_compatibility_message(compatibility):
-    """
-    Gets the compatibility message based on the compatibility score.
-    """
-    if compatibility > 80:
-        return "high"
-    if compatibility > 60:
-        return "moderate"
-    return "poor"
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
