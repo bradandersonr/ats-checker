@@ -1,6 +1,6 @@
-Flask==3.1.0
-ollama==0.4.8
-markitdown[pdf]==0.1.1
-markitdown[docx]==0.1.1
+Flask==3.1.1
+ollama==0.5.1
+markitdown[pdf]==0.1.2
+markitdown[docx]==0.1.2
 Markdown==3.8
 talisman==0.1.0
