@@ -11,7 +11,7 @@ services:
         - "traefik.enable=true"
         - "traefik.docker.network=traefik_webapp-dmz"  
         - "traefik.swarm.network=traefik_webapp-dmz"  
-        - "traefik.http.routers.ats.rule=Host(`ats.exampl.tech`)"
+        - "traefik.http.routers.ats.rule=Host(`ats.exampl.tech`, `check.jobtools.dev`)"
         - "traefik.http.routers.ats.entrypoints=websecure"
         - "traefik.http.routers.ats.tls=true"
         - "traefik.http.services.ats.loadbalancer.server.port=5000"
