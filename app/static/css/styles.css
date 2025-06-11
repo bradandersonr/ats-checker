@@ -73,6 +73,10 @@ body {
 	padding-top: 0.8rem;
 }
 
+#resume-form {
+	margin-top: 1.8rem;
+}
+
 .spinner {
 	display: inline-block;
 	width: 1rem;
