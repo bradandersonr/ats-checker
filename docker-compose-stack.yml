@@ -6,7 +6,7 @@ services:
     secrets:
       - GEMINI_API_KEY
     environment:
-      - GEMINI_API_KEY=/run/secrets/GEMINI_API_KEY
+      - GEMINI_API_KEY_FILE=/run/secrets/GEMINI_API_KEY
       - FLASK_DEBUG=False
       - FLASK_APP=app/main.py
     deploy:

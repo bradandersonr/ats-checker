@@ -30,7 +30,11 @@ app = Flask(__name__)
 llm_host = os.environ.get("OLLAMA_HOST")
 llm = Client(host=llm_host)
 
-gemini_api_key = os.environ.get("GEMINI_API_KEY")
+if os.environ.get("GEMINI_API_KEY"):
+    gemini_api_key = os.environ.get("GEMINI_API_KEY")
+elif os.environ.get("GEMINI_API_KEY_FILE"):
+    with open(os.environ.get("GEMINI_API_KEY_FILE"), 'r') as gemini_api_key_file:
+        gemini_api_key = gemini_api_key_file.read()
 
 gemini_client = genai.Client(api_key=gemini_api_key)
 
