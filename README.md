@@ -9,7 +9,7 @@ A web application that helps job seekers evaluate their resume's compatibility w
 
 ## Prerequisites
 
-- Python `3.10`
+- Python `3.12`
 
 ## Installation
 
@@ -19,12 +19,30 @@ A web application that helps job seekers evaluate their resume's compatibility w
 pip install -r requirements.txt
 ```
 
+## Environment
+The following environment variables should be set:
+```bash
+FLASK_DEBUG=False
+FLASK_APP=app/main.py
+```
+
+You will also need to provide a API Key to use Gemini services. This can be done in two ways:
+1. Directly using an Environment variable:
+```bash
+GEMINI_API_KEY=<YOUR_GEMINI_API_KEY>
+```
+
+2. Using a 'Secret' in Docker, that would be read from a file, but setting the following variable:
+```bash
+GEMINI_API_KEY_FILE=</path/to/GEMINI_API_KEY>
+```
+
 ## Usage
 
 1. Start the application:
 
 ```bash
-python app/main.py
+flask run --debug
 ```
 
 2. Open your web browser and navigate to `http://localhost:5000`
