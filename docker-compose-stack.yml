@@ -3,6 +3,12 @@ services:
     image: bradandersonr/ats-checker:latest
     ports:
     - "5000:5000"
+    secrets:
+      - GEMINI_API_KEY
+    environment:
+      - GEMINI_API_KEY=/run/secrets/GEMINI_API_KEY
+      - FLASK_DEBUG=False
+      - FLASK_APP=app/main.py
     deploy:
       replicas: 1
       restart_policy:
@@ -21,4 +27,7 @@ services:
       - traefik_webapp-dmz
 networks:
   traefik_webapp-dmz:
+    external: true
+secrets:
+  GEMINI_API_KEY:
     external: true

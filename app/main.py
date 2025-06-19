@@ -36,7 +36,7 @@ gemini_client = genai.Client(api_key=gemini_api_key)
 
 # Model
 if os.environ.get("LLM_MODEL"):
-   llm_model = os.environ.get("LLM_MODEL")
+    llm_model = os.environ.get("LLM_MODEL")
 else:
     llm_model = 'gemma-3-27b-it'
 
@@ -71,15 +71,15 @@ def read_file(file_path):
     Reads text from a file, supporting both DOCX and PDF formats.
     """
     try:
-        markdown = MarkItDown()
+        file_markdown = MarkItDown()
 
         if file_path.lower().endswith(".docx"):
             app.logger.debug("Processing resume as DOCX")
-            doc = markdown.convert(file_path)
+            doc = file_markdown.convert(file_path)
             return doc
         if file_path.lower().endswith(".pdf"):
             app.logger.debug("Processing resume as PDF")
-            pdf = markdown.convert(file_path)
+            pdf = file_markdown.convert(file_path)
             return pdf
         raise ValueError("Unsupported file format. Please use .docx or .pdf.")
     except Exception as e: # pylint: disable=broad-exception-caught
@@ -122,7 +122,7 @@ def assess_resume_compatibility(resume_file):
         You will now provide your response as described below:
         - Under the heading "Strengths" outline the strengths of the candidate described in the Resume. Write the responses in the second person (i.e. you, your etc). Format as an unordered list (ul).
         - Under the heading "Recommendations" outline a minimum of 3 and maxiumum of 10 improvements that could be made to the resume to increase its effectiveness and impact for hiring managers and ATS. Use specific examples that include quotes from the Resume and suggested alternatives. Format as an unordered list (ul).
-        - Under the heading "Keywords" provide a list of the 25 most signficant keywords found the resume. Format as a comma separated list.
+        - Under the heading "Keywords" provide a list of the 50 most signficant keywords found the resume. Format as a comma separated list.
         - Under the heading "Suggested Roles" suggest 3-5 roles that the candidate described in the resume would be a great fit for. Format as an unordered list (ul).
 
         Your response must comply with the following rules:
@@ -139,11 +139,11 @@ def assess_resume_compatibility(resume_file):
     #llm_result = markdown.markdown(llm_query.message.content)
 
     llm_query = gemini_client.models.generate_content(
-        model=llm_model, 
+        model=llm_model,
         #options=llm_options,
         contents=llm_prompt
     )
-    
+
     llm_result = markdown.markdown(llm_query.text)
 
     return {
