@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		// Show loading state
 		loadingIndicator.style.display = "inline-block";
 		errorDiv.style.display = "none";
-		resultsDiv.innerHTML = "Analysing your compatibility may take up to 5 minutes.";
+		resultsDiv.innerHTML = "Analysing your resume... this may take a few minutes!";
 
 		try {
 			const formData = new FormData(form);

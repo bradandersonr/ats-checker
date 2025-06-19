@@ -119,8 +119,8 @@ def assess_resume_compatibility(resume_file):
     Analyse the resume and provide a 4-5 sentence summary of your first impressions after reading their resume as a hiring manager. Return this in Markdown format under 'First Impressions'.
     Analyse the resume and determine the 5 most valuable strengths for the candidate described and how they can be communicated to a prospective employer. Return these as an unordered list in Markdown format under the heading 'Strengths'.
     Analyse the resume and create a list of the 5 most impactful improvements that could be made to improve compatibility with ATS. Return these as an unordered list in Markdown format under 'Improvements'.
-    Analyse the resume and extract the 100 most influential keywords that are relevant to ATS compatibility for the roles listen within the resume. Return them as a comma separate list in Markdown format under the heading 'Keywords Found'.
-    Analyse the resume and determine the 100 most valuable skills that are relevant to ATS compatibility for the roles listen within the resume. Return them as a comma separate list in Markdown format under the heading 'Skills'.
+    Analyse the resume and extract the 50 most influential keywords that are relevant to ATS compatibility for the roles listen within the resume. Return them as a comma separate list in Markdown format under the heading 'Keywords Found'.
+    Analyse the resume and determine the 50 most valuable skills that are relevant to ATS compatibility for the roles listen within the resume. Return them as a comma separate list in Markdown format under the heading 'Skills'.
     """.format(resume_markdown=resume_markdown)
 
     #app.logger.debug("resume_skills_query completed")
