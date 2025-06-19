@@ -18,6 +18,10 @@ body {
 	background-color: #023047;
 }
 
+.logo {
+	width: 16rem;
+}
+
 .button.is-primary {
 	background-color: #FB8500;
 	color: #efefef !important;

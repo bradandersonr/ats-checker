@@ -8,6 +8,8 @@ from ollama import Client
 from markitdown import MarkItDown
 import markdown
 
+from google import genai
+
 logging.basicConfig(level=logging.DEBUG)
 
 app = Flask(__name__)
@@ -28,9 +30,15 @@ app = Flask(__name__)
 llm_host = os.environ.get("OLLAMA_HOST")
 llm = Client(host=llm_host)
 
+gemini_api_key = os.environ.get("GEMINI_API_KEY")
+
+gemini_client = genai.Client(api_key=gemini_api_key)
+
 # Model
-#llm_model = 'gemma3:1b-it-qat'
-llm_model = 'gemma3'
+if os.environ.get("LLM_MODEL"):
+   llm_model = os.environ.get("LLM_MODEL")
+else:
+    llm_model = 'gemma-3-27b-it'
 
 # Set LLM parameters in the options dictionary
 llm_options = {
@@ -112,10 +120,10 @@ def assess_resume_compatibility(resume_file):
 
     <output_format>
         You will now provide your response as described below:
-        - Under the heading (h3) "Strengths" outline the strengths of the candidate described in the Resume. Write the responses in the second person (i.e. you, your etc). Format as an unordered list (ul).
-        - Under the heading (h3) "Recommendations" outline 3-5 improvements that could be made to the resume to increase its effectiveness. Format as an unordered list (ul).
-        - Under the heading (h3) "Keywords" outline 3-5 improvements that could be made to the resume to increase its compatibility to the job description. Format as a comma separated list.
-        - Under the heading (h3) "Suggested Roles" suggest 3-5 roles that the candidate described in the resume would be a great fit for. Format as an unordered list (ul).
+        - Under the heading "Strengths" outline the strengths of the candidate described in the Resume. Write the responses in the second person (i.e. you, your etc). Format as an unordered list (ul).
+        - Under the heading "Recommendations" outline a minimum of 3 and maxiumum of 10 improvements that could be made to the resume to increase its effectiveness and impact for hiring managers and ATS. Use specific examples that include quotes from the Resume and suggested alternatives. Format as an unordered list (ul).
+        - Under the heading "Keywords" provide a list of the 25 most signficant keywords found the resume. Format as a comma separated list.
+        - Under the heading "Suggested Roles" suggest 3-5 roles that the candidate described in the resume would be a great fit for. Format as an unordered list (ul).
 
         Your response must comply with the following rules:
         1. Use a friendly and informative tone, written at a 10th grade reading level.
@@ -127,21 +135,16 @@ def assess_resume_compatibility(resume_file):
     </output_format>
     """.format(resume_markdown=resume_markdown)
 
-    llm_query = llm.chat(
-            model=llm_model,
-            options=llm_options,
-            messages=[
-                {
-                    'role': 'system',
-                    'content': llm_system_prompt,
-                },
-                {
-                    'role': 'user',
-                    'content': llm_prompt,
-                },
-            ])
-    app.logger.debug("resume_skills_query completed")
-    llm_result = markdown.markdown(llm_query.message.content)
+    #app.logger.debug("resume_skills_query completed")
+    #llm_result = markdown.markdown(llm_query.message.content)
+
+    llm_query = gemini_client.models.generate_content(
+        model=llm_model, 
+        #options=llm_options,
+        contents=llm_prompt
+    )
+    
+    llm_result = markdown.markdown(llm_query.text)
 
     return {
         "result": llm_result,
