@@ -1,4 +1,5 @@
 # ATS Resume Checker
+[![Publish Docker image](https://github.com/bradandersonr/ats-checker/actions/workflows/docker-image.yml/badge.svg)](https://github.com/bradandersonr/ats-checker/actions/workflows/docker-image.yml) [![Pylint](https://github.com/bradandersonr/ats-checker/actions/workflows/pylint.yml/badge.svg)](https://github.com/bradandersonr/ats-checker/actions/workflows/pylint.yml)
 
 A web application that helps job seekers evaluate their resume's compatibility with job description.
 
