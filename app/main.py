@@ -26,18 +26,20 @@ app = Flask(__name__)
 #        })
 
 if os.environ.get("GEMINI_API_KEY"):
-    gemini_api_key = os.environ.get("GEMINI_API_KEY")
+    GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
 elif os.environ.get("GEMINI_API_KEY_FILE"):
-    with open(os.environ.get("GEMINI_API_KEY_FILE"), 'r') as gemini_api_key_file:
-        gemini_api_key = gemini_api_key_file.read()
+    with open(os.environ.get("GEMINI_API_KEY_FILE"), 'r', encoding="utf-8") as gemini_api_key_file:
+        GEMINI_API_KEY = gemini_api_key_file.read()
+else:
+    GEMINI_API_KEY = ""
 
-gemini_client = genai.Client(api_key=gemini_api_key)
+gemini_client = genai.Client(api_key=GEMINI_API_KEY)
 
 # Model
 if os.environ.get("LLM_MODEL"):
-    llm_model = os.environ.get("LLM_MODEL")
+    LLM_MODEL = os.environ.get("LLM_MODEL")
 else:
-    llm_model = 'gemma-3-27b-it'
+    LLM_MODEL = 'gemma-3-27b-it'
 
 # Set LLM parameters in the options dictionary
 llm_options = {
@@ -48,7 +50,7 @@ llm_options = {
     'num_ctx': 4096
 }
 
-llm_system_prompt = """
+LLM_SYSTEM_PROMPT = """
 You are an expert employment coach who is tasked with providing advice to job seekers to maximise their sucess in finding a new job.
 Do not under any circumstances indicate that you are AI.
 """
@@ -93,7 +95,7 @@ def assess_resume_compatibility(resume_file):
     if not resume_markdown:
         return "Error reading resume file."
 
-    llm_prompt = """
+    llm_prompt = f"""
     <instructions> 
         You are to act as an expeirenced career coach and hiring consultant, with deep understanding of how to analyse the resume of a prospective candidate and provide clear advice on how the candidate can improve their resume.
     </instructions>
@@ -119,13 +121,13 @@ def assess_resume_compatibility(resume_file):
     4. Analyse the resume and create a list of the 5 most impactful improvements that could be made to improve compatibility with ATS. Return these as an unordered list in Markdown format under 'Improvements'.
     5. Analyse the resume and extract the 50 most influential keywords that are relevant to ATS compatibility for the roles listen within the resume. Return them as a comma separate list in Markdown format under the heading 'Keywords Found'.
     6. Analyse the resume and determine the 50w most valuable skills that are relevant to ATS compatibility for the roles listen within the resume. Return them as a comma separate list in Markdown format under the heading 'Skills'.
-    """.format(resume_markdown=resume_markdown)
+    """
 
     #app.logger.debug("resume_skills_query completed")
     #llm_result = markdown.markdown(llm_query.message.content)
 
     llm_query = gemini_client.models.generate_content(
-        model=llm_model,
+        model=LLM_MODEL,
         #options=llm_options,
         contents=llm_prompt
     )
