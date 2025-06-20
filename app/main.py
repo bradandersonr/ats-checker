@@ -4,7 +4,6 @@ import logging
 from werkzeug.utils import secure_filename
 from flask import Flask, request, render_template, jsonify
 #from talisman import Talisman
-from ollama import Client
 from markitdown import MarkItDown
 import markdown
 
@@ -25,10 +24,6 @@ app = Flask(__name__)
 #            'frame-ancestors': '\'none\'',
 #            'require-trusted-types-for': '\'script\''
 #        })
-
-# Define the configuation for Ollama LLM
-llm_host = os.environ.get("OLLAMA_HOST")
-llm = Client(host=llm_host)
 
 if os.environ.get("GEMINI_API_KEY"):
     gemini_api_key = os.environ.get("GEMINI_API_KEY")
