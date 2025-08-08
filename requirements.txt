@@ -3,4 +3,4 @@ markitdown[pdf]==0.1.2
 markitdown[docx]==0.1.2
 Markdown==3.8.2
 talisman==0.1.0
-google-genai==1.27.0
+google-genai==1.29.0
