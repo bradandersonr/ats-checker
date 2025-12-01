@@ -1,6 +1,6 @@
 Flask==3.1.2
-markitdown[pdf]==0.1.3
-markitdown[docx]==0.1.3
+markitdown[pdf]==0.1.4
+markitdown[docx]==0.1.4
 Markdown==3.10
 talisman==0.1.0
 google-genai==1.49.0
