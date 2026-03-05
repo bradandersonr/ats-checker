@@ -25,7 +25,7 @@ jobs:
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
-        uses: docker/metadata-action@a60f0f62b5c12316066c8db464bfb2faafd7907b
+        uses: docker/metadata-action@6b695f7a8a3e9ce07613674750ee68840e5b6a1e
         with:
           images: bradandersonr/ats-checker
 
